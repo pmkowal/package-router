@@ -7,11 +7,30 @@ import (
 	"packageRouter/internal/models"
 	"path"
 	"strings"
+	"sync"
 )
 
 const endpoint = "https://router.project-osrm.org/route/v1/driving?overview=false"
 
-func GetRoute(src *models.LocationModel, dst *models.LocationModel) *models.RouteModel {
+func GetRouteWorker(
+	waitGroup *sync.WaitGroup,
+	mutex *sync.Mutex,
+	src models.LocationModel,
+	dst models.LocationModel,
+	responseModel *models.RoutesResponseModel,
+) {
+	defer waitGroup.Done()
+	route := getRoute(src, dst)
+	routeModel := &models.RouteResponseModel{}
+	routeModel.DestinationRaw = dst.Description()
+	routeModel.SetRoute(route)
+	mutex.Lock()
+	responseModel.Routes = append(responseModel.Routes, *routeModel)
+	mutex.Unlock()
+}
+
+
+func getRoute(src models.LocationModel, dst models.LocationModel) *models.RouteModel {
 	route := &models.RouteModel{}
 	endpointURL, err := url.Parse(endpoint)
 	if err != nil {
