@@ -20,5 +20,7 @@ func MakeRoutesResponseModel(requestModel *models.RoutesRequestModel) *models.Ro
 		go services.GetRouteWorker(waitGroup, mutex, maxChan, requestModel.Source, destination, responseModel)
 	}
 	waitGroup.Wait()
+	responseModel.SortRoutesByDurationAndDistance()
 	return responseModel
 }
+
