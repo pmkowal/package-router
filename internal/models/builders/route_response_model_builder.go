@@ -6,13 +6,18 @@ import (
 	"sync"
 )
 
+const maxConcurrentRequests = 10
+
 func MakeRoutesResponseModel(requestModel *models.RoutesRequestModel) *models.RoutesResponseModel {
 	waitGroup := &sync.WaitGroup{}
 	mutex := &sync.Mutex{}
+	maxChan := make(chan bool, maxConcurrentRequests)
 	responseModel := &models.RoutesResponseModel{}
+	responseModel.SourceRaw = requestModel.SourceRaw
 	for _, destination := range requestModel.Destinations {
+		maxChan <- true
 		waitGroup.Add(1)
-		go services.GetRouteWorker(waitGroup, mutex, requestModel.Source, destination, responseModel)
+		go services.GetRouteWorker(waitGroup, mutex, maxChan, requestModel.Source, destination, responseModel)
 	}
 	waitGroup.Wait()
 	return responseModel
