@@ -1,8 +1,8 @@
 package models
 
 type RoutesResponseModel struct {
-	SourceRaw string `json:"source"`
-	Routes []RouteResponseModel `json:"routes"`
+	SourceRaw string               `json:"source"`
+	Routes    []RouteResponseModel `json:"routes"`
 }
 
 type RouteResponseModel struct {

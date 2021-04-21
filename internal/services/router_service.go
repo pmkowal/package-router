@@ -55,7 +55,7 @@ func getRoute(src models.LocationModel, dst models.LocationModel) (*models.Route
 	if err != nil {
 		return nil, err
 	}
-	if len(responseModel.Routes) < 1 {
+	if !responseModel.IsValid() {
 		return nil, errors.New("no routes found")
 	}
 	return &responseModel.Routes[0], nil
