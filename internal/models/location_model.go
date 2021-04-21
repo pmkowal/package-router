@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+const locationError = "location should be a pair of two numbers separated by a comma"
+
 type LocationModel struct {
 	Latitude float64
 	Longitude float64
@@ -15,10 +17,17 @@ type LocationModel struct {
 func (m *LocationModel) Parse(location string) error {
 	source := strings.Split(location, ",")
 	if len(source) < 2 {
-		return errors.New("the argument should contain two values separated by a comma")
+		return errors.New(locationError)
 	}
-	m.Latitude, _ = strconv.ParseFloat(source[0], 64)
-	m.Longitude, _ = strconv.ParseFloat(source[1], 64)
+	var err error
+	m.Latitude, err = strconv.ParseFloat(source[0], 64)
+	if err != nil {
+		return errors.New(locationError)
+	}
+	m.Longitude, err = strconv.ParseFloat(source[1], 64)
+	if err != nil {
+		return errors.New(locationError)
+	}
 	return nil
 }
 

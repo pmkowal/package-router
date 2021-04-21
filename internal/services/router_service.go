@@ -12,7 +12,7 @@ import (
 	"sync"
 )
 
-const endpoint = "https://router.project-osrm.org/route/v1/driving?overview=false"
+const OSRMEndpoint = "https://router.project-osrm.org/route/v1/driving?overview=false"
 
 func GetRouteWorker(
 	waitGroup *sync.WaitGroup,
@@ -24,7 +24,7 @@ func GetRouteWorker(
 ) {
 	defer waitGroup.Done()
 	defer func(maxChan chan bool) { <-maxChan }(maxChan)
-	route, err := getRoute(src, dst)
+	route, err := getRouteFromOSRM(src, dst)
 	if err != nil {
 		log.Println(err)
 		return
@@ -38,8 +38,8 @@ func GetRouteWorker(
 }
 
 
-func getRoute(src models.LocationModel, dst models.LocationModel) (*models.RouteModel, error) {
-	endpointURL, err := url.Parse(endpoint)
+func getRouteFromOSRM(src models.LocationModel, dst models.LocationModel) (*models.RouteModel, error) {
+	endpointURL, err := url.Parse(OSRMEndpoint)
 	if err != nil {
 		return nil, err
 	}

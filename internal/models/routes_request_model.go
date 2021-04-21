@@ -1,6 +1,9 @@
 package models
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 type RoutesRequestModel struct {
 	SourceRaw       string
@@ -12,15 +15,19 @@ type RoutesRequestModel struct {
 func (m *RoutesRequestModel) Parse(values map[string][]string) error {
 	src := values["src"]
 	dst := values["dst"]
-	if len(src) < 1 {
-		return errors.New("`src` key should not be empty")
+	if len(src) != 1 {
+		return errors.New("`src` - only one source location can be provided")
 	}
 	if len(dst) < 1 {
-		return errors.New("`dst` key should have at least one value")
+		return errors.New("`dst` - at least one destination location need to be provided")
 	}
 	m.SourceRaw = src[0]
 	m.DestinationsRaw = dst
-	m.Source.Parse(m.SourceRaw)
+	err := m.Source.Parse(m.SourceRaw)
+	if err != nil {
+		message := fmt.Sprintf("`src` - %s", err.Error())
+		return errors.New(message)
+	}
 	for index, destination := range m.DestinationsRaw {
 		m.Destinations = append(m.Destinations, LocationModel{})
 		m.Destinations[index].Parse(destination)
