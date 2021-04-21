@@ -2,13 +2,16 @@ package models
 
 type RoutesResponseModel struct {
 	SourceRaw string `json:"source"`
-	Routes []RouteModel `json:"routes"`
+	Routes []RouteResponseModel `json:"routes"`
 }
 
-func (m *RoutesResponseModel) Make(requestModel RoutesRequestModel) {
-	m.SourceRaw = requestModel.SourceRaw
-	for index, destination := range requestModel.DestinationsRaw {
-		m.Routes = append(m.Routes, RouteModel{})
-		m.Routes[index].DestinationRaw = destination
-	}
+type RouteResponseModel struct {
+	DestinationRaw string  `json:"destination"`
+	Duration    float64 `json:"duration"`
+	Distance    float64 `json:"distance"`
+}
+
+func (m *RouteResponseModel) SetRoute(routeModel *RouteModel) {
+	m.Duration = routeModel.Duration
+	m.Distance = routeModel.Distance
 }

@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -20,3 +21,8 @@ func (m *LocationModel) Parse(location string) error {
 	m.Longitude, _ = strconv.ParseFloat(source[1], 64)
 	return nil
 }
+
+func (m *LocationModel) Description() string {
+	return fmt.Sprintf("%.6f,%.6f", m.Latitude, m.Longitude)
+}
+
