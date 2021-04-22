@@ -7,7 +7,7 @@ import (
 	"sync"
 )
 
-const maxConcurrentRequests = 10
+const maxConcurrentRequests = 5
 
 func MakeRoutesResponseModel(requestModel *requests.RoutesRequestModel) *responses.RoutesResponseModel {
 	waitGroup := &sync.WaitGroup{}
