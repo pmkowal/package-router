@@ -34,4 +34,3 @@ func (m *LocationModel) Parse(location string) error {
 func (m *LocationModel) Description() string {
 	return fmt.Sprintf("%.6f,%.6f", m.Latitude, m.Longitude)
 }
-

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"packageRouter/internal/models"
+	"packageRouter/internal/models/responses"
 	"path"
 	"strings"
 	"sync"
@@ -20,7 +21,7 @@ func GetRouteWorker(
 	maxChan chan bool,
 	src models.LocationModel,
 	dst models.LocationModel,
-	responseModel *models.RoutesResponseModel,
+	responseModel *responses.RoutesResponseModel,
 ) {
 	defer waitGroup.Done()
 	defer func(maxChan chan bool) { <-maxChan }(maxChan)
@@ -29,7 +30,7 @@ func GetRouteWorker(
 		log.Println(err)
 		return
 	}
-	routeModel := &models.RouteResponseModel{}
+	routeModel := &responses.RouteResponseModel{}
 	routeModel.DestinationRaw = dst.Description()
 	routeModel.SetRoute(route)
 	mutex.Lock()
@@ -50,7 +51,7 @@ func getRouteFromOSRM(src models.LocationModel, dst models.LocationModel) (*mode
 		return nil, err
 	}
 	defer response.Body.Close()
-	responseModel := &models.OSRMResponseModel{}
+	responseModel := &responses.OSRMResponseModel{}
 	err = json.NewDecoder(response.Body).Decode(&responseModel)
 	if err != nil {
 		return nil, err

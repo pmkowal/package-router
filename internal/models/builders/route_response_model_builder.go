@@ -1,18 +1,19 @@
 package builders
 
 import (
-	"packageRouter/internal/models"
+	"packageRouter/internal/models/requests"
+	"packageRouter/internal/models/responses"
 	"packageRouter/internal/services"
 	"sync"
 )
 
 const maxConcurrentRequests = 10
 
-func MakeRoutesResponseModel(requestModel *models.RoutesRequestModel) *models.RoutesResponseModel {
+func MakeRoutesResponseModel(requestModel *requests.RoutesRequestModel) *responses.RoutesResponseModel {
 	waitGroup := &sync.WaitGroup{}
 	mutex := &sync.Mutex{}
 	maxChan := make(chan bool, maxConcurrentRequests)
-	responseModel := &models.RoutesResponseModel{}
+	responseModel := &responses.RoutesResponseModel{}
 	responseModel.SourceRaw = requestModel.SourceRaw
 	for _, destination := range requestModel.Destinations {
 		maxChan <- true
@@ -23,4 +24,3 @@ func MakeRoutesResponseModel(requestModel *models.RoutesRequestModel) *models.Ro
 	responseModel.SortRoutesByDurationAndDistance()
 	return responseModel
 }
-

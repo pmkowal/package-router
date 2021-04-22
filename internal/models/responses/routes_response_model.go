@@ -1,7 +1,8 @@
-package models
+package responses
 
 import (
 	"math/big"
+	"packageRouter/internal/models"
 	"sort"
 )
 
@@ -36,7 +37,7 @@ type RouteResponseModel struct {
 	Distance       float64 `json:"distance"`
 }
 
-func (m *RouteResponseModel) SetRoute(routeModel *RouteModel) {
+func (m *RouteResponseModel) SetRoute(routeModel *models.RouteModel) {
 	m.Duration = routeModel.Duration
 	m.Distance = routeModel.Distance
 }

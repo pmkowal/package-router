@@ -1,15 +1,16 @@
-package models
+package requests
 
 import (
 	"errors"
 	"fmt"
+	"packageRouter/internal/models"
 )
 
 type RoutesRequestModel struct {
 	SourceRaw       string
-	Source          LocationModel
+	Source          models.LocationModel
 	DestinationsRaw []string
-	Destinations    []LocationModel
+	Destinations    []models.LocationModel
 }
 
 func (m *RoutesRequestModel) Parse(values map[string][]string) error {
@@ -29,8 +30,12 @@ func (m *RoutesRequestModel) Parse(values map[string][]string) error {
 		return errors.New(message)
 	}
 	for index, destination := range m.DestinationsRaw {
-		m.Destinations = append(m.Destinations, LocationModel{})
-		m.Destinations[index].Parse(destination)
+		m.Destinations = append(m.Destinations, models.LocationModel{})
+		err := m.Destinations[index].Parse(destination)
+		if err != nil {
+			message := fmt.Sprintf("`dst` - %s", err.Error())
+			return errors.New(message)
+		}
 	}
 	return nil
 }
