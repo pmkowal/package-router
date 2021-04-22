@@ -12,6 +12,7 @@ import (
 )
 
 const OSRMEndpoint = "https://router.project-osrm.org"
+const noRoutesFoundError = "no routes found"
 
 func GetRouteWorker(
 	waitGroup *sync.WaitGroup,
@@ -57,7 +58,7 @@ func getRouteFromOSRM(src models.LocationModel, dst models.LocationModel) (*mode
 		return nil, err
 	}
 	if !responseModel.IsValid() {
-		return nil, errors.New("no routes found")
+		return nil, errors.New(noRoutesFoundError)
 	}
 	return &responseModel.Routes[0], nil
 }

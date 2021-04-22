@@ -6,7 +6,10 @@ import (
 	"packageRouter/internal/handlers"
 )
 
+const routesPath = "/routes"
+const port = ":8080"
+
 func main() {
-	http.HandleFunc("/routes", handlers.RoutesHandler)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	http.HandleFunc(routesPath, handlers.RoutesHandler)
+	log.Fatal(http.ListenAndServe(port, nil))
 }

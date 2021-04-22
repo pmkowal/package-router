@@ -7,6 +7,9 @@ import (
 	"packageRouter/internal/models/requests"
 )
 
+const contentTypeKey = "Content-Type"
+const contentTypeValue = "application/json"
+
 func RoutesHandler(w http.ResponseWriter, r *http.Request) {
 	requestModel := &requests.RoutesRequestModel{}
 	err := requestModel.Parse(r.URL.Query())
@@ -16,7 +19,7 @@ func RoutesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	responseModel := builders.MakeRoutesResponseModel(requestModel)
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set(contentTypeKey, contentTypeValue)
 	w.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(w).Encode(responseModel)
 	if err != nil {
