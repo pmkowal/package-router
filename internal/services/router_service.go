@@ -5,15 +5,13 @@ import (
 	"errors"
 	"log"
 	"net/http"
-	"net/url"
 	"packageRouter/internal/models"
+	"packageRouter/internal/models/requests"
 	"packageRouter/internal/models/responses"
-	"path"
-	"strings"
 	"sync"
 )
 
-const OSRMEndpoint = "https://router.project-osrm.org/route/v1/driving?overview=false"
+const OSRMEndpoint = "https://router.project-osrm.org"
 
 func GetRouteWorker(
 	waitGroup *sync.WaitGroup,
@@ -40,13 +38,15 @@ func GetRouteWorker(
 
 
 func getRouteFromOSRM(src models.LocationModel, dst models.LocationModel) (*models.RouteModel, error) {
-	endpointURL, err := url.Parse(OSRMEndpoint)
+	requestModel := &requests.OSRMRequestModel{
+		Source: src,
+		Destination: dst,
+	}
+	url, err := requestModel.URL(OSRMEndpoint)
 	if err != nil {
 		return nil, err
 	}
-	locations := strings.Join([]string{src.Description(), dst.Description()}, ";")
-	endpointURL.Path = path.Join(endpointURL.Path, locations)
-	response, err := http.Get(endpointURL.String())
+	response, err := http.Get(url)
 	if err != nil {
 		return nil, err
 	}

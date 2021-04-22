@@ -16,7 +16,10 @@ type RoutesRequestModel struct {
 func (m *RoutesRequestModel) Parse(values map[string][]string) error {
 	src := values["src"]
 	dst := values["dst"]
-	if len(src) != 1 {
+	if len(src) == 0 {
+		return errors.New("`src` - source location need to be provided")
+	}
+	if len(src) > 1 {
 		return errors.New("`src` - only one source location can be provided")
 	}
 	if len(dst) < 1 {
